@@ -141,3 +141,33 @@ if __name__ == "__main__":
     print("\n---- Attacked Vote (Eve Present) ----")
     print(cast_secure_vote("PARTY_B", eve_enabled=True))
 
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"status": "Backend running"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
