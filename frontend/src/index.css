@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gradient-to-br from-black via-slate-900 to-black text-slate-200;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+

@@ -1,0 +1,67 @@
+.circuit-container {
+  padding: 40px;
+  color: #e5e7eb;
+  background: #020617;
+  font-family: "IBM Plex Sans", monospace;
+}
+
+.qc-svg {
+  margin-top: 20px;
+  background: #020617;
+}
+
+.wire {
+  stroke: #e5e7eb;
+  stroke-width: 2;
+}
+
+.gate {
+  fill: none;
+  stroke: #38bdf8;
+  stroke-width: 2;
+}
+
+.gate-text {
+  fill: #e5e7eb;
+  font-size: 16px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.control {
+  fill: #e5e7eb;
+}
+
+.target {
+  fill: none;
+  stroke: #e5e7eb;
+  stroke-width: 2;
+}
+
+.measure {
+  fill: none;
+  stroke: #e5e7eb;
+  stroke-width: 2;
+}
+
+.nav {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #38bdf8;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+

@@ -1,0 +1,67 @@
+.circuit-wrapper {
+  padding: 20px;
+  color: #e5e7eb;
+}
+
+.circuit-title {
+  color: #38bdf8;
+  margin-bottom: 14px;
+}
+
+.circuit-board {
+  background: #020617;
+  border: 1px solid #1e293b;
+  padding: 16px;
+}
+
+.circuit-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.qubit-label {
+  width: 50px;
+  color: #94a3b8;
+}
+
+.wire-line {
+  flex: 1;
+  height: 2px;
+  background: #475569;
+  position: relative;
+}
+
+.gate {
+  position: absolute;
+  top: -16px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020617;
+  font-size: 13px;
+}
+
+.gate:nth-child(1) { left: 10%; }
+.gate:nth-child(2) { left: 25%; }
+.gate:nth-child(3) { left: 35%; }
+.gate:nth-child(4) { left: 50%; }
+.gate:nth-child(5) { left: 70%; }
+
+.entangle {
+  border-radius: 50%;
+}
+
+.measure {
+  border-radius: 6px;
+}
+
+.eve {
+  border-color: #fb7185;
+  color: #fb7185;
+}
+
