@@ -1,0 +1,71 @@
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.circuit-card {
+  background: #f0f4f8;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+.circuit-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.gate {
+  padding: 10px 16px;
+  background: #38bdf8;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  min-width: 40px;
+}
+
+.channel {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.eve {
+  border-left: 6px solid #dc2626;
+}
+
+.match {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.mismatch {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.circuit-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+

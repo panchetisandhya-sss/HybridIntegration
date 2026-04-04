@@ -1,0 +1,342 @@
+import "./about.css";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const steps = [
+  {
+    id: 1,
+    title: "Voter Authentication",
+    short: "Identity verification",
+    full:
+      "The voter is authenticated using classical credentials. Once verified, a temporary quantum session is created. Identity and vote are never linked.",
+  },
+  {
+    id: 2,
+    title: "BB84 Key Distribution",
+    short: "Quantum key generation",
+    full:
+      "BB84 generates a shared secret key using random bases and qubit polarization. Any eavesdropping increases QBER.",
+  },
+  {
+    id: 3,
+    title: "E91 Entanglement Check",
+    short: "Quantum channel validation",
+    full:
+      "Entangled qubit pairs are tested using CHSH inequality. If S > 2, entanglement is confirmed.",
+  },
+  {
+    id: 4,
+    title: "Vote Encryption",
+    short: "Quantum-secure encoding",
+    full:
+      "The vote is encrypted using the BB84 key and validated using E91 entanglement assurance.",
+  },
+  {
+    id: 5,
+    title: "Secure Vote Casting",
+    short: "Final acceptance",
+    full:
+      "If QBER is low and CHSH > 2, the vote is securely accepted. Otherwise, it is rejected.",
+  },
+];
+
+export default function About() {
+  const [activeStep, setActiveStep] = useState(null);
+
+  return (
+    <div className="min-h-screen pt-32 px-6 text-gray-100 max-w-7xl mx-auto">
+
+      {/* Title */}
+      <h1 className="text-4xl font-bold mb-12 bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-transparent">
+        Quantum Secure Voting Workflow
+      </h1>
+
+      {/* STEP BOXES */}
+      <div className="steps-grid">
+
+        {steps.map((step, index) => (
+          <div key={step.id} className="relative">
+
+            {/* DOTTED FLOW LINE */}
+            {activeStep && activeStep.id === step.id && (
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: "100%" }}
+                className="absolute -top-8 left-1/2 h-8 border-l-2 border-dashed border-cyan-400"
+              />
+            )}
+
+            {/* STEP BOX */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setActiveStep(step)}
+              className={`cursor-pointer h-40 flex flex-col justify-center items-center text-center 
+                border-2 rounded-xl shadow-xl transition
+                ${
+                  activeStep?.id === step.id
+                    ? "border-cyan-400 bg-cyan-400/10"
+                    : "border-white/20 bg-white/5"
+                }`}
+            >
+              <div className="text-sm text-cyan-300 mb-2">
+                STEP {step.id}
+              </div>
+              <div className="text-lg font-bold">{step.title}</div>
+              <div className="text-xs text-slate-400 mt-2 px-4">
+                {step.short}
+              </div>
+            </motion.div>
+          </div>
+        ))}
+      </div>
+
+      {/* DESCRIPTION PANEL */}
+      <AnimatePresence>
+        {activeStep && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-16 p-10 border border-cyan-400/40 bg-black/60 rounded-xl shadow-2xl max-w-4xl"
+          >
+            <h2 className="text-2xl font-bold text-cyan-300">
+              {activeStep.title}
+            </h2>
+            <p className="mt-4 text-slate-300 leading-relaxed">
+              {activeStep.full}
+            </p>
+
+            <button
+              onClick={() => setActiveStep(null)}
+              className="mt-8 px-8 py-2 border border-cyan-400 text-cyan-300 font-semibold rounded-lg"
+            >
+              Close
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* WORKFLOW FLOW */}
+      {activeStep && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-20 p-10 border border-white/20 bg-gray-900/70 rounded-xl"
+        >
+          <h3 className="text-xl font-bold mb-6 text-amber-300">
+            Dynamic Quantum Workflow
+          </h3>
+
+          <div className="flex flex-wrap gap-6 justify-center">
+            {steps.map((s) => (
+              <motion.div
+                key={s.id}
+                animate={{
+                  boxShadow:
+                    s.id <= activeStep.id
+                      ? "0 0 20px rgba(34,211,238,0.8)"
+                      : "none",
+                }}
+                className="px-6 py-4 border border-white/20 bg-white/5 rounded-lg text-sm"
+              >
+                {s.title}
+              </motion.div>
+            ))}
+          </div>
+
+          <p className="mt-6 text-slate-400 text-center">
+            Bright flow indicates verified quantum security.  
+            Eve interference breaks this chain automatically.
+          </p>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== ABOUT PAGE ===== */
+
+.about-container {
+  min-height: 100vh;
+  padding-top: 120px;
+  padding-left: 24px;
+  padding-right: 24px;
+  color: #e5e7eb;
+  max-width: 1400px;
+  margin: auto;
+}
+
+/* Step Cards */
+.step-card {
+  height: 160px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.step-card:hover {
+  transform: scale(1.05);
+  border-color: #22d3ee;
+}
+
+/* Active Step */
+.step-card.active {
+  background: rgba(34, 211, 238, 0.15);
+  border-color: #22d3ee;
+  box-shadow: 0 0 25px rgba(34, 211, 238, 0.6);
+}
+
+/* Step Text */
+.step-id {
+  font-size: 12px;
+  color: #67e8f9;
+  margin-bottom: 6px;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.step-short {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 6px;
+}
+
+/* Description Box */
+.step-detail {
+  margin-top: 60px;
+  padding: 40px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.25);
+}
+
+/* Workflow Boxes */
+.workflow-box {
+  padding: 16px 26px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+}
+
+/* Active Workflow */
+.workflow-active {
+  box-shadow: 0 0 22px rgba(251, 191, 36, 0.9);
+  border-color: #fbbf24;
+}
+
+/* Dotted Flow Line */
+.flow-line {
+  position: absolute;
+  width: 2px;
+  height: 40px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #22d3ee,
+    #22d3ee 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  left: 50%;
+  top: -40px;
+  transform: translateX(-50%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .step-card {
+    height: auto;
+    padding: 24px;
+  }
+}
+/* ===== STEPS GRID (FULL SCREEN FIT) ===== */
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+/* Square / Rectangle cards that scale */
+.step-card {
+  min-height: 200px;
+  max-height: 260px;
+  width: 100%;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.step-card:hover {
+  transform: scale(1.04);
+  border-color: #22d3ee;
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.4);
+}
+
+/* Active highlight */
+.step-card.active {
+  background: rgba(34, 211, 238, 0.15);
+  border-color: #22d3ee;
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.7);
+}
+
+/* Text scaling */
+.step-title {
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: bold;
+}
+
+.step-short {
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: #94a3b8;
+  margin-top: 10px;
+}
+

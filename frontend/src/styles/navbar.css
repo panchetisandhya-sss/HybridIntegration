@@ -1,0 +1,66 @@
+/* ===== Quantum Secure Vote – Navbar (2026 UI) ===== */
+
+.qs-navbar {
+  pointer-events: auto;
+}
+
+/* Container glass effect */
+.qs-navbar-container {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Brand styling */
+.qs-navbar-brand {
+  color: #c19a6b; /* copper / quantum gold */
+  text-shadow: 0 0 12px rgba(193, 154, 107, 0.6);
+  letter-spacing: 0.08em;
+  transition: opacity 0.3s ease;
+}
+
+.qs-navbar-brand:hover {
+  opacity: 0.85;
+}
+
+/* Divider */
+.qs-navbar-divider {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Links */
+.qs-navbar-links {
+  display: flex;
+}
+
+/* Base link */
+.qs-navbar-link {
+  color: #4b5563; /* gray-600 */
+  position: relative;
+  padding-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+/* Hover */
+.qs-navbar-link:hover {
+  color: #000;
+}
+
+/* Active link */
+.qs-active {
+  color: #000;
+  font-weight: 600;
+}
+
+/* Active underline */
+.qs-active-underline {
+  background: linear-gradient(90deg, #000, #555);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Inactive */
+.qs-inactive {
+  color: #6b7280;
+}
+

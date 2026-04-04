@@ -1,0 +1,150 @@
+from qiskit import QuantumCircuit, execute, Aer
+import numpy as np
+
+# --- 1. BB84 Simulation Logic ---
+def simulate_bb84(key_length=100, include_eve=False):
+    """Simulates BB84 protocol for key distribution and QBER calculation."""
+    # Alice generates random bits and random bases (0=Z, 1=X)
+    a_bits = np.random.randint(0, 2, key_length)
+    a_bases = np.random.randint(0, 2, key_length)
+    
+    # Bob generates random bases for measurement
+    b_bases = np.random.randint(0, 2, key_length)
+    
+    qc = QuantumCircuit(key_length, key_length)
+    
+    # Qubit Preparation (Alice)
+    for i in range(key_length):
+        if a_bits[i] == 1:
+            qc.x(i) # Apply X for bit 1
+        if a_bases[i] == 1:
+            qc.h(i) # Apply H for X basis
+
+    # Eavesdropping (Eve) - if included
+    if include_eve:
+        for i in range(key_length):
+            # Eve measures randomly, disturbing the state
+            if np.random.rand() < 0.2: # 20% chance Eve interferes
+                e_bases = np.random.randint(0, 2)
+                if e_bases == 1:
+                    qc.h(i)
+                qc.measure(i, i)
+                if e_bases == 1:
+                    qc.h(i) # Eve tries to re-encode
+    
+    # Measurement (Bob)
+    for i in range(key_length):
+        if b_bases[i] == 1:
+            qc.h(i) # Apply H if Bob measures in X basis
+        qc.measure(i, i)
+
+    # Execute simulation
+    simulator = Aer.get_backend('qasm_simulator')
+    job = execute(qc, simulator, shots=1) # One shot to get the final state
+    result = job.result().get_counts()
+    
+    # Decode Bob's measurement results
+    # Qiskit returns counts as {'bitstring': count}, we grab the bitstring (which is Bob's final key)
+    b_bits_raw = list(result.keys())[0]
+    b_bits = np.array([int(bit) for bit in b_bits_raw[::-1]]) # Reverse for Qiskit convention
+    
+    # Sifting (Public Basis Comparison)
+    sifted_a = []
+    sifted_b = []
+    
+    for i in range(key_length):
+        if a_bases[i] == b_bases[i]:
+            sifted_a.append(a_bits[i])
+            sifted_b.append(b_bits[i])
+            
+    # Calculate QBER (Quantum Bit Error Rate)
+    key_length = len(sifted_a)
+    mismatches = np.sum(np.array(sifted_a) != np.array(sifted_b))
+    qber = mismatches / key_length if key_length > 0 else 0
+    
+    # Log details
+    log = {
+        "sifted_length": key_length,
+        "mismatches": int(mismatches),
+        "qber": round(qber, 4),
+        "circuit_qasm": qc.qasm() # For visualization/review
+    }
+    
+    return qber, log
+
+# --- 2. E91 Simulation Logic (CHSH) ---
+def simulate_chsh(noise_level=0.0):
+    """Simulates CHSH game for Bell test and entanglement verification."""
+    # Define measurement bases (Pauli X, Z, and intermediate)
+    a_angles = [0, np.pi/4]  # a, a' (0, 45 degrees)
+    b_angles = [np.pi/8, 3*np.pi/8] # b, b' (22.5, 67.5 degrees)
+    
+    # For simulation simplicity, we calculate the theoretical S-value based on the noise
+    # In a real Qiskit simulation, you'd run 4 circuits (one for each pair E(a,b), E(a,b'), etc.)
+    
+    # Theoretical maximal quantum violation S = 2*sqrt(2) approx 2.828
+    # Noise reduces the correlation and S value.
+    max_S = 2 * np.sqrt(2)
+    classical_S = 2.0
+    
+    # Simulate effect of noise/decoherence/Eve on Bell pair fidelity (Concurrence C)
+    # C = 1 (perfect entanglement) -> S = max_S
+    # C = 0 (separable) -> S <= classical_S
+    
+    # We use a simple linear degradation model for demonstration
+    concurrence = 1.0 - noise_level # e.g., noise_level=0.1 -> C=0.9
+    simulated_S = max_S * concurrence
+    
+    # Clamp S-value to the classical limit if entanglement is completely lost (noise_level >= 1/sqrt(2))
+    if simulated_S < classical_S:
+        simulated_S = classical_S - np.random.rand() * 0.1 # Slightly less than 2 to show violation failure
+        
+    log = {
+        "concurrence": round(concurrence, 4),
+        "chsh_s": round(simulated_S, 4),
+        "noise_level": noise_level
+    }
+    
+    return simulated_S, log
+
+# --- 3. Integrated Voting Logic (Called by FastAPI Endpoint) ---
+def cast_secure_vote(party_id, eve_enabled=False):
+    """Integrates BB84 for Key Authentication and E91 for Channel Integrity."""
+    QBER_THRESHOLD = 0.05 # Academic standard: 5% error threshold
+    CHSH_LIMIT = 2.0       # Classical bound: S <= 2
+    
+    # 1. BB84 Check (Eavesdropping Detection)
+    qber, bb84_log = simulate_bb84(include_eve=eve_enabled)
+    
+    # 2. E91 Check (Entanglement Integrity)
+    # Map Eve's intervention to channel noise for E91 simulation
+    noise_level = 0.2 if eve_enabled else 0.01 
+    chsh_s, e91_log = simulate_chsh(noise_level=noise_level)
+    
+    # 3. Final Security Validation
+    is_qber_secure = qber <= QBER_THRESHOLD
+    is_chsh_secure = chsh_s > CHSH_LIMIT
+    
+    vote_status = "REJECTED"
+    if is_qber_secure and is_chsh_secure:
+        vote_status = "SECURE"
+        # In a real system, the key would now be used to decrypt/authenticate the vote bit
+        
+    final_log = {
+        "vote_id": "VOTE_HASH_" + str(np.random.randint(1000, 9999)), # Hashed ID
+        "party_id": party_id,
+        "status": vote_status,
+        "qber": bb84_log['qber'],
+        "chsh_s": e91_log['chsh_s'],
+        "security_check": {
+            "qber_pass": is_qber_secure,
+            "chsh_pass": is_chsh_secure
+        },
+        "full_log": {**bb84_log, **e91_log}
+    }
+    
+    # Save to history database here (omitted for brevity)
+    
+    return final_log
+exit
+
