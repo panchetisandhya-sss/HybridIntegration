@@ -1,5 +1,23 @@
+# Node
 node_modules/
+
+# Environment variables
 .env
+
+# Build files
 dist/
 build/
+
+# Logs
 *.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# OS files
+.DS_Store
+Thumbs.db
