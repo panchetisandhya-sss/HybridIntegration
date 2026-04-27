@@ -5,3 +5,6 @@ qiskit-aer
 pycryptodome
 pydantic
 websockets
+slowapi
+passlib[bcrypt]
+python-jose[cryptography]
