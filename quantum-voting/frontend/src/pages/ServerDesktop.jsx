@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/api';
+const WS_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace('http', 'ws');
 
 // Speedometer Component for results
 const Speedometer = ({ value, total, label, color = "#22c55e" }) => {
@@ -143,14 +145,14 @@ export default function ServerDesktop() {
   };
 
   const fetchBlockchainTree = () => {
-    fetch('http://localhost:8000/api/admin/blockchain-tree')
+    fetch(`${API_BASE}/admin/blockchain-tree`)
       .then(res => res.json())
       .then(data => setTreeData(data))
       .catch(err => console.error(err));
   };
 
   const fetchResults = () => {
-    fetch('http://localhost:8000/api/admin/results')
+    fetch(`${API_BASE}/admin/results`)
       .then(res => res.json())
       .then(data => {
         if (data.results) {
@@ -171,12 +173,12 @@ export default function ServerDesktop() {
   };
 
   const fetchDashboardStats = () => {
-    fetch('http://localhost:8000/api/admin/dashboard/stats')
+    fetch(`${API_BASE}/admin/dashboard/stats`)
       .then(res => res.json())
       .then(data => setDashboardStats(data))
       .catch(err => console.error(err));
       
-    fetch('http://localhost:8000/api/admin/dashboard')
+    fetch(`${API_BASE}/admin/dashboard`)
       .then(res => res.json())
       .then(data => {
           setVoterNodes(data.voters || []);
@@ -195,7 +197,7 @@ export default function ServerDesktop() {
         fetchResults();
     }, 10000);
 
-    const ws = new WebSocket('ws://localhost:8000/ws/admin');
+    const ws = new WebSocket(`${WS_BASE}/ws/admin`);
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'ping') return;
@@ -219,7 +221,7 @@ export default function ServerDesktop() {
 
   const loadMandals = async (stateCode, districtCode) => {
     setSelectedDistrict(districtCode);
-    const response = await fetch(`http://localhost:8000/api/geography/mandals/${stateCode}/${districtCode}`);
+    const response = await fetch(`${API_BASE}/geography/mandals/${stateCode}/${districtCode}`);
     const data = await response.json();
     setMandals(data.mandals || []);
   };

@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import VoteTally from '../components/VoteTally';
 import LedgerTable from '../components/LedgerTable';
 
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/api';
+const WS_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace('http', 'ws');
+
 export default function AdminDashboard() {
   const [auth, setAuth] = useState(false);
   const [pwd, setPwd] = useState('');
@@ -23,7 +26,6 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/api';
       const res = await fetch(`${API_BASE}/admin/dashboard`);
       if(res.ok) {
         const d = await res.json();
@@ -44,7 +46,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     if(auth) {
       fetchDashboardData();
-      ws.current = new WebSocket('ws://localhost:8000/ws/admin');
+      ws.current = new WebSocket(`${WS_BASE}/ws/admin`);
       ws.current.onmessage = (event) => {
         const parsed = JSON.parse(event.data);
         if(parsed.event === 'vote_cast') {
