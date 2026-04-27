@@ -8,7 +8,12 @@ import SimulationView from '../components/SimulationView';
 import AboutPage from './AboutPage';
 import './account.css';
 
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/api';
+const getApiBase = () => {
+    let url = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    if (url.endsWith('/')) url = url.slice(0, -1);
+    return url + '/api';
+};
+const API_BASE = getApiBase();
 
 // Modal for Quantum Information
 const QInfoModal = ({ isOpen, onClose, metrics }) => {
@@ -138,10 +143,12 @@ export default function VoterInterface() {
             fetchAccountData(data.access_token);
         }
       } else {
-        setErrorMSG(data.detail || 'Login failed');
+        const data = await res.json();
+        setErrorMSG(`Login failed: ${data.detail || 'Invalid credentials'}`);
       }
     } catch (err) {
-      setErrorMSG(`Server error: Unable to reach ${API_BASE}. Check your VITE_API_URL setting.`);
+        setErrorMSG(`Connection Error: Unable to reach ${API_BASE}. Please ensure your backend is live and VITE_API_URL is correct.`);
+        console.error("Fetch error:", err);
     }
   };
 
