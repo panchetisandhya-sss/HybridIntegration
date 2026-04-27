@@ -17,7 +17,16 @@ __pycache__/
 
 # Virtual environment
 venv/
+vev/
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# Databases
+*.db
+*.sqlite3
+blockchain/
+
+# Antigravity
+.antigravityignore

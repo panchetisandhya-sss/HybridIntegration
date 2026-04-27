@@ -18,15 +18,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Placeholder for vote history (In-memory storage for demo)
-VOTE_HISTORY = []
+import motor.motor_asyncio
+import os
+
+# Connect to MongoDB
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
+db = client.quantum_voting_db
+users_collection = db.users
+history_collection = db.history
 
 @app.get("/")
 def home():
-    return {"status": "Quantum Backend is Active", "version": "1.0"}
-
-# In-memory "database" for users
-USERS_DB = {}
+    return {"status": "Quantum Backend is Active", "version": "1.0", "db": "Connected to MongoDB"}
 
 
 # --- Pydantic Models ---
@@ -57,13 +61,14 @@ class LoginRequest(BaseModel):
 @app.post("/api/login")
 async def login(req: LoginRequest):
     # Check if user exists
-    if req.voter_id not in USERS_DB:
+    user = await users_collection.find_one({"voter_id": req.voter_id})
+    if not user:
         # Auto-register (store them in 'database')
-        USERS_DB[req.voter_id] = {"password": req.password}
+        await users_collection.insert_one({"voter_id": req.voter_id, "password": req.password})
         return {"message": "User registered and logged in successfully", "token": f"token_{req.voter_id}"}
     
     # If user exists, check password
-    if USERS_DB[req.voter_id]["password"] != req.password:
+    if user["password"] != req.password:
         raise HTTPException(status_code=401, detail="Invalid credentials. Incorrect password for existing user.")
 
     return {"message": "Login successful", "token": f"token_{req.voter_id}"}
@@ -77,7 +82,8 @@ async def cast_vote(vote_req: VoteRequest):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     # Blockchain hash computing
-    previous_hash = VOTE_HISTORY[-1]["hash"] if len(VOTE_HISTORY) > 0 else "0" * 64
+    last_vote = await history_collection.find_one(sort=[("_id", -1)])
+    previous_hash = last_vote["hash"] if last_vote else "0" * 64
     
     block_data = {
         "timestamp": timestamp,
@@ -98,7 +104,7 @@ async def cast_vote(vote_req: VoteRequest):
     block_data["circuit_qubits"] = result.get('circuit_qubits', [])
     block_data["hash"] = block_hash
     
-    VOTE_HISTORY.append(block_data)
+    await history_collection.insert_one(block_data.copy())
     
     # Terminal Log (for the frontend console view)
     print(f"\n>>> QUANTUM VOTE CAST: ID={result['vote_id']}, Status={result['status']}")
@@ -132,7 +138,12 @@ async def get_history(token: str = ""):
     # Filter by user token (only show to the user who cast them)
     if token:
         # User history
-        return [entry for entry in VOTE_HISTORY if entry.get("voter_token") == token]
+        cursor = history_collection.find({"voter_token": token})
+        history_docs = await cursor.to_list(length=100)
+        # remove _id since it's an ObjectId which isn't serializable by default
+        for doc in history_docs:
+            doc.pop("_id", None)
+        return history_docs
     
     # If no token passed, for security, maybe return empty or just let it return all (for demo purposes)
     return []

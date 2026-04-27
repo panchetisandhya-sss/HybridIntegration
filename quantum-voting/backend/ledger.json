@@ -1,0 +1,38 @@
+[
+    {
+        "voter_id": "123",
+        "encrypted_vote": "ZQQ0yedC/vdR+WsylDE7SKGexGviPfla/O4q/vGbnTUwcynldMKsoVCEOw==",
+        "qber": 2.21,
+        "s_value": 2.59,
+        "timestamp": "2026-04-26T13:52:26.978045",
+        "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "hash": "6feb9585ec0ff825691037f19f53bde9913beeb21b8676829a8674e3f18543dd"
+    },
+    {
+        "voter_id": "sir",
+        "encrypted_vote": "r8erbn5K9BRB3Yy92Ns0U2vI44g5IG8WdiducJjMghACyFR5SMVueXMC9g==",
+        "qber": 2.48,
+        "s_value": 2.82,
+        "timestamp": "2026-04-26T13:55:11.334296",
+        "previous_hash": "6feb9585ec0ff825691037f19f53bde9913beeb21b8676829a8674e3f18543dd",
+        "hash": "29e6b8dac4e3a920c9ca5f7521c71007bd50d4a9be904363a6032ef88d649252"
+    },
+    {
+        "voter_id": "ABC9571139",
+        "encrypted_vote": "fgDpAHNL6tAaxED4Z6MpgybwdWZew0KTXDbwsrdsWA75XZGGIqEsRze6Qg==",
+        "qber": 3.46,
+        "s_value": 2.52,
+        "timestamp": "2026-04-26T16:17:07.586388",
+        "previous_hash": "29e6b8dac4e3a920c9ca5f7521c71007bd50d4a9be904363a6032ef88d649252",
+        "hash": "a2cb3fbfb47f3c65391605497f8c6e150ebac78dc8da6ac1ce99e2879d56a0a6"
+    },
+    {
+        "voter_id": "ABC8154257",
+        "encrypted_vote": "FR1wLeNxhGZNUNtwOMSxbgngsU4oFX7v/By9lRU0mdDjEUrd9JLR2muRLw==",
+        "qber": 2.69,
+        "s_value": 2.54,
+        "timestamp": "2026-04-26T16:50:12.785184",
+        "previous_hash": "a2cb3fbfb47f3c65391605497f8c6e150ebac78dc8da6ac1ce99e2879d56a0a6",
+        "hash": "6b0ad6d615dd0a02c5c48d17d3d9a90f9db3a4eca972865facf27a4a1b582443"
+    }
+]

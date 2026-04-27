@@ -1,0 +1,20 @@
+{
+    "123": {
+        "name": "sandhya",
+        "status": "Voted",
+        "qber": 2.21,
+        "s_value": 2.59,
+        "timestamp": "2026-04-26T13:52:26.978045"
+    },
+    "manu": {
+        "name": "manvitha",
+        "status": "Pending"
+    },
+    "sir": {
+        "name": "siri",
+        "status": "Voted",
+        "qber": 2.48,
+        "s_value": 2.82,
+        "timestamp": "2026-04-26T13:55:11.334296"
+    }
+}
