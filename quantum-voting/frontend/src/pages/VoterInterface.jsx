@@ -141,7 +141,7 @@ export default function VoterInterface() {
         setErrorMSG(data.detail || 'Login failed');
       }
     } catch (err) {
-      setErrorMSG('Server error');
+      setErrorMSG(`Server error: Unable to reach ${API_BASE}. Check your VITE_API_URL setting.`);
     }
   };
 
