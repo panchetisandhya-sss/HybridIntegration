@@ -23,7 +23,8 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/admin/dashboard');
+      const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8000') + '/api';
+      const res = await fetch(`${API_BASE}/admin/dashboard`);
       if(res.ok) {
         const d = await res.json();
         setData(d);

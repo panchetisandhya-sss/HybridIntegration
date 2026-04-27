@@ -130,7 +130,7 @@ export default function ServerDesktop() {
   const handleLogin = async (e) => {
       e.preventDefault();
       try {
-        const res = await fetch('http://localhost:8000/api/admin/login', {
+        const res = await fetch(`${API_BASE}/admin/login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(loginCreds)
